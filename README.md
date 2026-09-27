@@ -70,6 +70,17 @@ npm run dev
 | `leads_final.csv` | Processed dataset (deliverable) |
 | `skillcase-ui/` | React dashboard (prototype) |
 
+## Assumptions
+
+Two judgment calls were made where the brief left them to me:
+
+1. **What Skillcase does:** German language training (A1→B2) plus nursing job
+   placement in Germany, for Indian nurses. All relevance and outreach logic
+   follows from this.
+2. **Relevance criteria:** a lead is relevant only if they are a nurse
+   (BSc Nursing or GNM) **and** want to work in Germany. Non-nursing
+   professions and other destination countries are excluded.
+
 ## Design notes
 
 - **AI where judgment is needed; rules where transparency matters.** Classification,
@@ -80,3 +91,11 @@ npm run dev
   conversation text — the reliable source — rather than guessing from a common name.
 - **Batched API calls** keep the pipeline within the Gemini free tier and are how
   this would scale in production.
+
+## Known limitations
+
+- The rule-based priority scorer caps the experience bonus, so a few very senior
+  B2 nurses (e.g. L014, L024) can be under-ranked. The QC layer flags these as
+  `PRIORITY_MISMATCH` for human review rather than hiding the issue.
+- Outreach that references specific vacancies is flagged `UNVERIFIED_CLAIM` —
+  a human should confirm real openings before sending.
